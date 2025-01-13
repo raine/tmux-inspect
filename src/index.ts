@@ -1,4 +1,5 @@
 import { execSync } from "child_process"
+
 import { writeFileSync } from "fs"
 import { tmpdir } from "os"
 import { join } from "path"
@@ -23,21 +24,35 @@ export function tmuxInspectPopup(obj: unknown): void {
 
 const collectedWindowObjects: unknown[] = []
 const collectedPopupObjects: unknown[] = []
+const collectedInspectWindowObjects: unknown[] = []
+const collectedInspectPopupObjects: unknown[] = []
 
 let tempFilePathWindowAll: string | null = null
 let tempFilePathPopupAll: string | null = null
+let tempFilePathInspectWindowAll: string | null = null
+let tempFilePathInspectPopupAll: string | null = null
 
 function handleCollectionDisplay(
   collection: unknown[],
   tempFilePath: string | null,
   tmuxCommand: string,
+  viewerType: "jless" | "inspect",
 ): void {
   if (collection.length > 0 && tempFilePath) {
     try {
-      const json = JSON.stringify(collection)
-      writeFileSync(tempFilePath, json)
+      const content =
+        viewerType === "inspect"
+          ? inspect(collection, {
+              colors: true,
+              depth: null,
+              showHidden: false,
+              compact: false,
+            })
+          : JSON.stringify(collection)
+      writeFileSync(tempFilePath, content)
+      const viewer = viewerType === "inspect" ? "less" : "jless"
       execSync(
-        `tmux ${tmuxCommand} 'sh -c "jless ${tempFilePath}; rm -f ${tempFilePath}"'`,
+        `tmux ${tmuxCommand} 'sh -c "${viewer} ${tempFilePath}; rm -f ${tempFilePath}"'`,
         { stdio: "inherit" },
       )
     } catch (error) {
@@ -55,11 +70,25 @@ function setupExitHandlerIfNeeded(): void {
         collectedWindowObjects,
         tempFilePathWindowAll,
         "new-window -d",
+        "jless",
       )
       handleCollectionDisplay(
         collectedPopupObjects,
         tempFilePathPopupAll,
         "popup -E",
+        "jless",
+      )
+      handleCollectionDisplay(
+        collectedInspectWindowObjects,
+        tempFilePathInspectWindowAll,
+        "new-window -d",
+        "inspect",
+      )
+      handleCollectionDisplay(
+        collectedInspectPopupObjects,
+        tempFilePathInspectPopupAll,
+        "popup -E",
+        "inspect",
       )
     })
     exitHandlerRegistered = true
@@ -67,6 +96,8 @@ function setupExitHandlerIfNeeded(): void {
 }
 
 export function tmuxJsonWindowAll(obj: unknown): void {
+  if (!process.env.TMUX) return
+
   collectedWindowObjects.push(obj)
   if (!tempFilePathWindowAll) {
     tempFilePathWindowAll = createTempFile("tmux-json-window-all")
@@ -75,6 +106,8 @@ export function tmuxJsonWindowAll(obj: unknown): void {
 }
 
 export function tmuxJsonPopupAll(obj: unknown): void {
+  if (!process.env.TMUX) return
+
   collectedPopupObjects.push(obj)
   if (!tempFilePathPopupAll) {
     tempFilePathPopupAll = createTempFile("tmux-json-popup-all")
@@ -82,7 +115,28 @@ export function tmuxJsonPopupAll(obj: unknown): void {
   }
 }
 
+export function tmuxInspectWindowAll(obj: unknown): void {
+  if (!process.env.TMUX) return
+
+  collectedInspectWindowObjects.push(obj)
+  if (!tempFilePathInspectWindowAll) {
+    tempFilePathInspectWindowAll = createTempFile("tmux-inspect-window-all")
+    setupExitHandlerIfNeeded()
+  }
+}
+
+export function tmuxInspectPopupAll(obj: unknown): void {
+  if (!process.env.TMUX) return
+
+  collectedInspectPopupObjects.push(obj)
+  if (!tempFilePathInspectPopupAll) {
+    tempFilePathInspectPopupAll = createTempFile("tmux-inspect-popup-all")
+    setupExitHandlerIfNeeded()
+  }
+}
+
 function displayInTmux(obj: unknown, tmuxCommand: string): void {
+  if (!process.env.TMUX) return
   const tempFilePath = createTempFile("tmux-json")
 
   try {
@@ -98,6 +152,7 @@ function displayInTmux(obj: unknown, tmuxCommand: string): void {
 }
 
 function displayInTmuxInspect(obj: unknown, tmuxCommand: string): void {
+  if (!process.env.TMUX) return
   const tempFilePath = createTempFile("tmux-inspect")
 
   try {

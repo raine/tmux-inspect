@@ -57,3 +57,13 @@ circular references.
 #### `tmuxInspectWindow(obj: unknown)`
 
 Opens a new tmux window displaying the object using Node.js's `util.inspect()`.
+
+#### `tmuxInspectWindowAll(obj: unknown)`
+
+Adds the object to a collection that will be displayed in a new window using
+`util.inspect()` when the process exits.
+
+#### `tmuxInspectPopupAll(obj: unknown)`
+
+Adds the object to a collection that will be displayed in a popup using
+`util.inspect()` when the process exits.

@@ -1,6 +1,6 @@
 {
   "name": "tmux-json-inspect",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A developer tool for inspecting JSON objects in tmux",
   "author": "Raine Virta <raine.virta@gmail.com> (https://github.com/raine)",
   "main": "./dist/cjs/index.js",
@@ -33,5 +33,6 @@
     "@types/node": "^22.10.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
-  }
+  },
+  "packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a"
 }
