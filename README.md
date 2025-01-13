@@ -1,4 +1,4 @@
-# tmux-json-inspect
+# tmux-inspect
 
 A developer tool that simplifies inspecting objects during runtime using tmux.
 
@@ -8,7 +8,7 @@ highlighting, folding, and search, through a convenient tmux (popup) window.
 ## install
 
 ```sh
-$ npm install --save-dev tmux-json-inspect
+$ npm install --save-dev tmux-inspect
 ```
 
 ### requirements
@@ -19,7 +19,7 @@ $ npm install --save-dev tmux-json-inspect
 ## usage
 
 ```ts
-import { tmuxJsonPopup } from "tmux-json-inspect"
+import { tmuxJsonPopup } from "tmux-inspect"
 
 const data = fetchSomeLargeJsonObject()
 tmuxJsonPopup(data)
