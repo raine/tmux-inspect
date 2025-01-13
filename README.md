@@ -1,9 +1,9 @@
 # tmux-inspect
 
-A developer tool that simplifies inspecting objects during runtime using tmux.
+A library that simplifies inspecting objects during development using tmux
+popups and jless.
 
-The killer feature: View objects in a proper viewer (`jless`) with syntax
-highlighting, folding, and search, through a convenient tmux (popup) window.
+![demo](https://github.com/user-attachments/assets/cb6769af-ad02-4508-922c-45f8132d0c86)
 
 ## install
 
@@ -13,10 +13,12 @@ $ npm install --save-dev tmux-inspect
 
 ### requirements
 
-- tmux (duh)
+- [tmux](https://github.com/tmux/tmux) (duh)
 - [jless](https://jless.io/)
 
 ## usage
+
+### basic example
 
 ```ts
 import { tmuxJsonPopup } from "tmux-inspect"
@@ -51,8 +53,9 @@ process exits.
 #### `tmuxInspectPopup(obj: unknown)`
 
 Opens a tmux popup window displaying the object using Node.js's
-`util.inspect()`. Useful for inspecting non-JSON objects like functions or
-circular references.
+`util.inspect()`.
+
+Useful for inspecting non-JSON objects like functions or circular references.
 
 #### `tmuxInspectWindow(obj: unknown)`
 
