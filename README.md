@@ -1,7 +1,7 @@
 # tmux-inspect
 
-A library that simplifies inspecting objects during development using tmux
-popups and jless.
+A Node.js library for inspecting objects during development using tmux popups
+and jless.
 
 ![demo](https://github.com/user-attachments/assets/cb6769af-ad02-4508-922c-45f8132d0c86)
 
@@ -23,7 +23,7 @@ $ npm install --save-dev tmux-inspect
 ```ts
 import { tmuxJsonPopup } from "tmux-inspect"
 
-const data = fetchSomeLargeJsonObject()
+const data = await fetchData()
 tmuxJsonPopup(data)
 ```
 
@@ -34,28 +34,34 @@ formatted UI powered by `jless`.
 
 #### `tmuxJsonPopup(obj: unknown)`
 
-Opens a tmux popup window displaying the JSON object using jless.
+Opens a tmux popup window displaying the given object using jless. The object is
+serialized to JSON with `JSON.serialize`. Note that this call blocks program
+execution until the popup is closed.
 
 #### `tmuxJsonWindow(obj: unknown)`
 
-Opens a new tmux window displaying the JSON object using jless.
+Opens a new tmux window displaying the given object using jless. The object is
+serialized to JSON with `JSON.serialize`.
 
 #### `tmuxJsonPopupAll(obj: unknown)`
 
-Adds the object to a collection that will be displayed in a popup when the
-process exits.
+Similar to `tmuxJsonPopup`, but opening of the popup is deferred to process
+exit. Multiple calls to this function will collect all objects and display them
+together in a single popup when the process terminates.
 
 #### `tmuxJsonWindowAll(obj: unknown)`
 
-Adds the object to a collection that will be displayed in a new window when the
-process exits.
+Similar to `tmuxJsonWindow`, but opening of the window is deferred to process
+exit. Multiple calls to this function will collect all objects and display them
+together in a single popup when the process terminates.
 
 #### `tmuxInspectPopup(obj: unknown)`
 
 Opens a tmux popup window displaying the object using Node.js's
 `util.inspect()`.
 
-Useful for inspecting non-JSON objects like functions or circular references.
+Useful for inspecting objects that contain values that cannot be serialized to
+JSON.
 
 #### `tmuxInspectWindow(obj: unknown)`
 
