@@ -19,7 +19,6 @@
     "LICENSE"
   ],
   "scripts": {
-    "dev": "tsx src/run.ts",
     "clean": "rm -rf dist",
     "build": "npm run clean && npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p tsconfig.esm.json",
